@@ -13,18 +13,14 @@ class MyTree {
         this.mainArray = new ArrayList<>(game.getArray());
         this.num = num;
     }
-    MyTree(SudokuGame game, ArrayList<Integer> prewMainArray, int num){
+    private MyTree(SudokuGame game, ArrayList<Integer> prevMainArray, int num){
         this.game = game;
-        this.mainArray = new ArrayList<>(prewMainArray);
+        this.mainArray = new ArrayList<>(prevMainArray);
         this.num = num;
     }
     void start() {
         game.end = false;
-        while(mainArray.get(num) != 0) {
-            num++;
-            if(num == 80)
-                break;
-        }
+        while(mainArray.get(num) != 0 && num != 80) num++;
         initArray();
         if (num == 80) {
             game.rightResult = true;
@@ -38,7 +34,7 @@ class MyTree {
         next_branch();
     }
 
-    void next_branch() {
+    private void next_branch() {
         if(game.rightResult)
             return;
         for(int i = 0; i < array_of_branches.size(); i++) {
@@ -47,23 +43,20 @@ class MyTree {
             branch.start();
         }
     }
-
-    void initArray() {
+    private void initArray() {
             for (int i = 1; i <= 9; i++) {
-                if(isAvailable(i))  // если тру, то добавить элемент в массив
+                if(isAvailable(i))  // if true then add element in the array
                     array_of_branches.add(i);
             }
             if(array_of_branches.size() == 0) {
                 game.end = true;
             }
     }
-
-
-    boolean isAvailable(int n) { //тут надо определить, можем ли мы использовать здесь эту цифру (п)
+    private boolean isAvailable(int n) { //here we should to identify, can we use that number 'n' here
         int i;
         int j;
         int square;
-        if(num < 9 ) {
+        if(num < 9 ) {  //another complicated algorithm that should be updated
             j = num; i = 0;
         }
         else if(num < 18 ) {

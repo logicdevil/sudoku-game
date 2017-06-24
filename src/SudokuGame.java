@@ -21,20 +21,14 @@ public class SudokuGame {
             textField.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyTyped(KeyEvent e) {
-                    if(e.getKeyChar() == KeyEvent.VK_ENTER) {
-                        doCalculating();
-                        e.consume();
-                    }
-                    else if(e.getKeyChar() == KeyEvent.VK_SPACE) {
-                        cleanTheArea();
-                        e.consume();
-                    }
+                    if(e.getKeyChar() == KeyEvent.VK_ENTER) {   doCalculating();   }
+                    else if(e.getKeyChar() == KeyEvent.VK_SPACE) {  cleanTheArea(); }
                     else {
                         if (e.getKeyChar() > 48 && e.getKeyChar() < 58) { // 49 == 1, 57 == 9 ASCII
                             textField.setText("" + e.getKeyChar());
                         } else textField.setText("");
-                        e.consume();
                     }
+                    e.consume();
                 }
             });
             textField.setHorizontalAlignment(JTextField.CENTER);
@@ -45,37 +39,29 @@ public class SudokuGame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
         frame.setVisible(true);
-
-
-
     }
-    void cleanTheArea() {
-        for(JTextField textField : textFieldArray) {
-            textField.setText("");
-        }
+    private void cleanTheArea() {
+        for(JTextField textField : textFieldArray) {    textField.setText("");  }
     }
-    void printArray(ArrayList<Integer> arrayList, ArrayList<JTextField> textFieldArray) {
-        for(int i = 0; i < arrayList.size(); i++) {
-            textFieldArray.get(i).setText("" + arrayList.get(i));
-        }
+    private void printArray(ArrayList<Integer> arrayList, ArrayList<JTextField> textFieldArray) {
+        for(int i = 0; i < arrayList.size(); i++) { textFieldArray.get(i).setText("" + arrayList.get(i));   }
     }
-    void doCalculating() {
+    private void doCalculating() {
         end  = false;
         rightResult = false;
         array.clear();
         for(JTextField text : textFieldArray) {
-            if(text.getText().equals(""))
-                array.add(0);
+            if(text.getText().equals(""))   array.add(0);
             else array.add(Integer.parseInt(text.getText()));
         }
-        if(!validate(array))
-            JOptionPane.showMessageDialog(null, "Incorrect input!");
+        if(!validate(array))    JOptionPane.showMessageDialog(null, "Incorrect input!");
         else {
             MyTree root = new MyTree(this, 0);
             root.start();
             printArray(array, textFieldArray);
         }
     }
+
     public ArrayList<Integer> getArray() {
         return array;
     }
@@ -83,7 +69,7 @@ public class SudokuGame {
     public void setArray(ArrayList<Integer> array) {
         this.array = array;
     }
-    boolean validate(ArrayList<Integer> array) {
+    private boolean validate(ArrayList<Integer> array) {
         for(int i = 0; i < 9; i++) {        //horizontal and vertical validation
             String arrayIntVer = "123456789";
             String arrayIntHor = "123456789";
@@ -96,7 +82,7 @@ public class SudokuGame {
                 else arrayIntHor = arrayIntHor.replaceAll(array.get(i+j*9).toString(), "");
             }
         }
-        for(int i = 0; i < 21; i++) {
+        for(int i = 0; i < 21; i++) {       //complicated algorithm that checking every square in sudoku
             String arrayIntSquare = "123456789";
             if(i%3 == 0 && i != 0)
                 i+=6;

@@ -23,6 +23,11 @@ public class SudokuGame {
                 public void keyTyped(KeyEvent e) {
                     if(e.getKeyChar() == KeyEvent.VK_ENTER) {
                         doCalculating();
+                        e.consume();
+                    }
+                    else if(e.getKeyChar() == KeyEvent.VK_SPACE) {
+                        cleanTheArea();
+                        e.consume();
                     }
                     else {
                         if (e.getKeyChar() > 48 && e.getKeyChar() < 58) { // 49 == 1, 57 == 9 ASCII
@@ -44,6 +49,11 @@ public class SudokuGame {
 
 
     }
+    void cleanTheArea() {
+        for(JTextField textField : textFieldArray) {
+            textField.setText("");
+        }
+    }
     void printArray(ArrayList<Integer> arrayList, ArrayList<JTextField> textFieldArray) {
         for(int i = 0; i < arrayList.size(); i++) {
             textFieldArray.get(i).setText("" + arrayList.get(i));
@@ -59,7 +69,7 @@ public class SudokuGame {
             else array.add(Integer.parseInt(text.getText()));
         }
         if(!validate(array))
-            JOptionPane.showMessageDialog(null, "Incorrect!");
+            JOptionPane.showMessageDialog(null, "Incorrect input!");
         else {
             MyTree root = new MyTree(this, 0);
             root.start();
@@ -74,7 +84,7 @@ public class SudokuGame {
         this.array = array;
     }
     boolean validate(ArrayList<Integer> array) {
-        for(int i = 0; i < 9; i++) {
+        for(int i = 0; i < 9; i++) {        //horizontal and vertical validation
             String arrayIntVer = "123456789";
             String arrayIntHor = "123456789";
             for(int j = 0; j < 9; j++) {
@@ -84,6 +94,18 @@ public class SudokuGame {
                 if(arrayIntHor.length() == arrayIntHor.replaceAll(array.get(i+j*9).toString(), "").length() && array.get(i+j*9) != 0)
                     return false;
                 else arrayIntHor = arrayIntHor.replaceAll(array.get(i+j*9).toString(), "");
+            }
+        }
+        for(int i = 0; i < 21; i++) {
+            String arrayIntSquare = "123456789";
+            if(i%3 == 0 && i != 0)
+                i+=6;
+            for(int j = 0; j < 21; j++) {
+                if(j%3 == 0 && j != 0)
+                    j+=6;
+                if(arrayIntSquare.length() == arrayIntSquare.replaceAll(array.get(i*3+j).toString(), "").length() && array.get(i*3+j) != 0)
+                    return false;
+                else arrayIntSquare = arrayIntSquare.replaceAll(array.get(i*3+j).toString(), "");
             }
         }
         return true;

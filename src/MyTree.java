@@ -3,14 +3,14 @@ import java.util.ArrayList;
 /**
  * Created by daymond on 3/15/17.
  */
-public class MyTree {
-    public SudokuGame game;
-    public ArrayList<Integer> mainArray;
-    public ArrayList<Integer> array_of_branches = new ArrayList<>();
-    int num;
+class MyTree {
+    private SudokuGame game;
+    private ArrayList<Integer> mainArray;
+    private ArrayList<Integer> array_of_branches = new ArrayList<>();
+    private int num;
     MyTree(SudokuGame game, int num) {
         this.game = game;
-        this.mainArray = new ArrayList<>(game.array);
+        this.mainArray = new ArrayList<>(game.getArray());
         this.num = num;
     }
     MyTree(SudokuGame game, ArrayList<Integer> prewMainArray, int num){
@@ -25,13 +25,12 @@ public class MyTree {
             if(num == 80)
                 break;
         }
-
         initArray();
         if (num == 80) {
             game.rightResult = true;
             game.end = true;
-            mainArray.set(num,array_of_branches.get(0));
-            game.array = mainArray;
+            if(array_of_branches.size() > 0) mainArray.set(num,array_of_branches.get(0));
+            game.setArray(mainArray);
         }
         if(game.end) {
             return;
@@ -40,14 +39,12 @@ public class MyTree {
     }
 
     void next_branch() {
+        if(game.rightResult)
+            return;
         for(int i = 0; i < array_of_branches.size(); i++) {
-            if(game.rightResult)
-                break;
             mainArray.set(num, array_of_branches.get(i));
             MyTree branch = new MyTree(game, mainArray, num + 1);
             branch.start();
-
-
         }
     }
 

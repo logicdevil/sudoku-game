@@ -8,22 +8,19 @@ import java.util.ArrayList;
  * Created by daymond on 3/15/17.
  */
 public class SudokuGame {
-     ArrayList<Integer> array;
-     boolean end, rightResult;
-    ArrayList<JTextField> textFieldArray;
+    private ArrayList<Integer> array;
+    boolean end, rightResult;
+    private ArrayList<JTextField> textFieldArray;
     void start() {
-        array = new ArrayList<>();
         JFrame frame = new JFrame("Sudoku");
         JPanel panel = new JPanel(new GridLayout(9, 9), true);
+        array = new ArrayList<>();
         textFieldArray = new ArrayList<>();
-
-
         for(int i = 0; i < 81; i++) {
             JTextField textField = new JTextField();
             textField.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyTyped(KeyEvent e) {
-                    super.keyTyped(e);
                     if(e.getKeyChar() == KeyEvent.VK_ENTER) {
                         doCalculating();
                     }
@@ -39,8 +36,6 @@ public class SudokuGame {
             textFieldArray.add(textField);
             panel.add(textField);
         }
-
-
         frame.getContentPane().add(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
@@ -53,20 +48,6 @@ public class SudokuGame {
         for(int i = 0; i < arrayList.size(); i++) {
             textFieldArray.get(i).setText("" + arrayList.get(i));
         }
-
-        /*for(int i = 0; i < 9; i++) {
-            if(i%3 == 0)
-                System.out.println("----------------------------------");
-            for(int j = 0; j < 9; j++) {
-                if(j%3 == 0)
-                    System.out.print("| ");
-                System.out.print(arrayList.get(i*9 + j) + "  ");
-            }
-            System.out.print("|");
-            System.out.println();
-        }
-        System.out.println("----------------------------------");*/
-
     }
     void doCalculating() {
         end  = false;
@@ -77,12 +58,34 @@ public class SudokuGame {
                 array.add(0);
             else array.add(Integer.parseInt(text.getText()));
         }
-        while (true) {
+        if(!validate(array))
+            JOptionPane.showMessageDialog(null, "Incorrect!");
+        else {
             MyTree root = new MyTree(this, 0);
             root.start();
-            if(rightResult)
-                break;
+            printArray(array, textFieldArray);
         }
-        printArray(array, textFieldArray);
+    }
+    public ArrayList<Integer> getArray() {
+        return array;
+    }
+
+    public void setArray(ArrayList<Integer> array) {
+        this.array = array;
+    }
+    boolean validate(ArrayList<Integer> array) {
+        for(int i = 0; i < 9; i++) {
+            String arrayIntVer = "123456789";
+            String arrayIntHor = "123456789";
+            for(int j = 0; j < 9; j++) {
+                if(arrayIntVer.length() == arrayIntVer.replaceAll(array.get(i*9+j).toString(), "").length() && array.get(i*9+j) != 0)
+                    return false;
+                else arrayIntVer = arrayIntVer.replaceAll(array.get(i*9+j).toString(), "");
+                if(arrayIntHor.length() == arrayIntHor.replaceAll(array.get(i+j*9).toString(), "").length() && array.get(i+j*9) != 0)
+                    return false;
+                else arrayIntHor = arrayIntHor.replaceAll(array.get(i+j*9).toString(), "");
+            }
+        }
+        return true;
     }
 }
